@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dividend Hunter Pro Calculator</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --danger: #dc2626;
+            --danger-bg: #fee2e2;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+            --focus-ring: rgba(37, 99, 235, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: var(--card-bg);
+            max-width: 550px;
+            width: 100%;
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid #f1f5f9;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.025em;
+            margin-bottom: 6px;
+        }
+
+        h1 span {
+            color: var(--primary);
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .label-wrapper {
+            margin-bottom: 6px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .label-desc {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .prefix {
+            position: absolute;
+            left: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text);
+            outline: none;
+            transition: all 0.2s ease;
+            background-color: #fba0;
+        }
+
+        .has-prefix input[type="number"] {
+            padding-left: 42px;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--focus-ring);
+            background-color: #fff;
+        }
+
+        .checkbox-card {
+            background-color: #f1f5f9;
+            padding: 14px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-card:hover {
+            background-color: #e2e8f0;
+        }
+
+        .checkbox-card input {
+            margin-top: 3px;
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+        }
+
+        .checkbox-text label {
+            cursor: pointer;
+        }
+
+        .results {
+            margin-top: 30px;
+            border-top: 2px dashed #e2e8f0;
+            padding-top: 25px;
+        }
+
+        .result-card {
+            padding: 18px;
+            border-radius: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .zone-safe {
+            background-color: var(--success-bg);
+            color: var(--success);
+            border: 1px solid rgba(22, 163, 74, 0.1);
+        }
+
+        .zone-danger {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(220, 38, 38, 0.1);
+        }
+
+        .zone-neutral {
+            background-color: #f1f5f9;
+            color: var(--text);
+            border: 1px solid #e2e8f0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .info-box {
+            background: #f8fafc;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            border: 1px solid #f1f5f9;
+        }
+
+        .info-box span {
+            display: block;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 4px;
+        }
+
+        .threshold-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 4px 12px 12px 4px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1e40af;
+        }
+
+        .threshold-box span {
+            display: block;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 4px;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.5;
+            padding: 0 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1><span>Dividend Trap</span> Shield Pro</h1>
+        <div class="subtitle">Sistem proteksi kalkulasi untuk memaksimalkan cuan dari strategi Dividend Hunting</div>
+    </header>
+
+    <div class="form-group">
+        <div class="label-wrapper">
+            <label for="priceBuy">Harga Beli Saham</label>
+            <span class="label-desc">Harga rata-rata per lembar saat Anda membeli saham sebelum atau saat Cum-Date.</span>
+        </div>
+        <div class="input-wrapper has-prefix">
+            <span class="prefix">Rp</span>
+            <input type="number" id="priceBuy" value="5000" placeholder="0">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label-wrapper">
+            <label for="dividend">Nominal Dividen per Lembar</label>
+            <span class="label-desc">Jumlah pembagian keuntungan bersih yang dijanjikan emiten untuk setiap 1 lembar saham.</span>
+        </div>
+        <div class="input-wrapper has-prefix">
+            <span class="prefix">Rp</span>
+            <input type="number" id="dividend" value="250" placeholder="0">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label-wrapper">
+            <label for="lots">Jumlah Pembelian (Lot)</label>
+            <span class="label-desc">Satuan perdagangan saham. 1 Lot setara dengan 100 lembar saham di Bursa Efek Indonesia.</span>
+        </div>
+        <div class="input-wrapper">
+            <input type="number" id="lots" value="10" placeholder="0">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="label-wrapper">
+            <label for="priceEx">Proyeksi Harga Saat Ex-Date</label>
+            <span class="label-desc">Perkiraan harga saham keesokan harinya setelah Cum-Date berakhir ketika pasar mulai menyesuaikan harga.</span>
+        </div>
+        <div class="input-wrapper has-prefix">
+            <span class="prefix">Rp</span>
+            <input type="number" id="priceEx" value="4650" placeholder="0">
+        </div>
+    </div>
+
+    <div class="checkbox-card" onclick="toggleCheckbox()">
+        <input type="checkbox" id="taxApply" checked onclick="event.stopPropagation(); calculate();">
+        <div class="checkbox-text">
+            <label for="taxApply">Potong Pajak Dividen Final 10%</label>
+            <span class="label-desc" style="margin-top: 1px;">Pajak penghasilan final atas dividen yang diterima investor perorangan domestik.</span>
+        </div>
+    </div>
+
+    <div class="results">
+        <div id="statusCard" class="result-card zone-neutral">
+            Menghitung...
+        </div>
+
+        <div class="info-grid">
+            <div class="info-box">
+                Total Modal Awal
+                <span id="txtModal">Rp0</span>
+            </div>
+            <div class="info-box">
+                Dividen Netto Bersih
+                <span id="txtDivNet">Rp0</span>
+            </div>
+            <div class="info-box">
+                Capital Gain / Loss
+                <span id="txtCapitalResult">Rp0</span>
+            </div>
+            <div class="info-box">
+                Total Return (ROI)
+                <span id="txtTotalReturn">Rp0</span>
+            </div>
+        </div>
+
+        <div class="threshold-box">
+            Batas Maksimal Penurunan Harga Saham (Titik Impas):
+            <span id="txtMaxDrop">0% (Rp0)</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        <b>Tips Keamanan:</b> Pastikan penurunan harga pasar pada hari <i>Ex-Date</i> tidak melewati angka psikologis batas maksimal di atas agar total portofolio Anda tetap berada di zona profit.
+    </div>
+</div>
+
+<script>
+    const inputs = ['priceBuy', 'dividend', 'lots', 'priceEx'];
+    inputs.forEach(id => document.getElementById(id).addEventListener('input', calculate));
+
+    function toggleCheckbox() {
+        const checkbox = document.getElementById('taxApply');
+        checkbox.checked = !checkbox.checked;
+        calculate();
+    }
+
+    function formatRupiah(angka) {
+        return 'Rp ' + Math.round(angka).toLocaleString('id-ID');
+    }
+
+    function calculate() {
+        const priceBuy = parseFloat(document.getElementById('priceBuy').value) || 0;
+        const dividend = parseFloat(document.getElementById('dividend').value) || 0;
+        const lots = parseFloat(document.getElementById('lots').value) || 0;
+        const priceEx = parseFloat(document.getElementById('priceEx').value) || 0;
+        const taxApply = document.getElementById('taxApply').checked;
+
+        const totalShares = lots * 100;
+        const modalAwal = priceBuy * totalShares;
+        const taxRate = taxApply ? 0.10 : 0;
+        const divNetPerShare = dividend * (1 - taxRate);
+        const totalDivNet = divNetPerShare * totalShares;
+
+        const capitalGainLoss = (priceEx - priceBuy) * totalShares;
+        const totalReturn = totalDivNet + capitalGainLoss;
+
+        const maxDropPercent = priceBuy > 0 ? (divNetPerShare / priceBuy) * 100 : 0;
+        const breakEvenPrice = priceBuy - divNetPerShare;
+
+        document.getElementById('txtModal').innerText = formatRupiah(modalAwal);
+        document.getElementById('txtDivNet').innerText = formatRupiah(totalDivNet);
+        
+        const txtCapitalResult = document.getElementById('txtCapitalResult');
+        txtCapitalResult.innerText = formatRupiah(capitalGainLoss);
+        if (capitalGainLoss > 0) {
+            txtCapitalResult.style.color = 'var(--success)';
+        } else if (capitalGainLoss < 0) {
+            txtCapitalResult.style.color = 'var(--danger)';
+        } else {
+            txtCapitalResult.style.color = 'var(--text)';
+        }
+
+        const txtTotalReturn = document.getElementById('txtTotalReturn');
+        txtTotalReturn.innerText = formatRupiah(totalReturn);
+        if (totalReturn > 0) {
+            txtTotalReturn.style.color = 'var(--success)';
+        } else if (totalReturn < 0) {
+            txtTotalReturn.style.color = 'var(--danger)';
+        } else {
+            txtTotalReturn.style.color = 'var(--text)';
+        }
+
+        document.getElementById('txtMaxDrop').innerText = `${maxDropPercent.toFixed(2)}% (${formatRupiah(breakEvenPrice)})`;
+
+        const statusCard = document.getElementById('statusCard');
+        if (totalReturn > 0) {
+            statusCard.innerText = `PROFIT BERSIH: +${formatRupiah(totalReturn)}`;
+            statusCard.className = "result-card zone-safe";
+        } else if (totalReturn === 0) {
+            statusCard.innerText = "TITIK IMPAS (BREAK-EVEN)";
+            statusCard.className = "result-card zone-neutral";
+        } else {
+            statusCard.innerText = `TERJEBAK TRAP (RUGI): ${formatRupiah(totalReturn)}`;
+            statusCard.className = "result-card zone-danger";
+        }
+    }
+
+    calculate();
+</script>
+
+</body>
+</html>
