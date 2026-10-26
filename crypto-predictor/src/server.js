@@ -42,6 +42,7 @@ let catalog = [];
 let refreshTimer = null;
 let screenerTimer = null;
 let refreshing = false;
+let bootstrapPromise = null;
 let portfolioCursor = 0;
 const historyCache = new Map();
 const aiCache = new Map();
@@ -152,7 +153,7 @@ async function refreshPortfolioPrices() {
 	}
 }
 
-async function bootstrap() {
+async function bootstrap({ scheduleRefresh = true } = {}) {
 	const loaded = await loadCatalog();
 	catalog = loaded.stocks;
 	state.stockCount = catalog.length;
@@ -161,6 +162,7 @@ async function bootstrap() {
 	state.selectedCode = initial.code;
 	state.selectedName = initial.name;
 	await refreshMarket();
+	if (!scheduleRefresh) return;
 	refreshTimer = setInterval(refreshMarket, config.idx.refreshMs);
 	screenerTimer = setInterval(() => {
 		if (screenerState.selectedCodes.length) {
@@ -169,6 +171,24 @@ async function bootstrap() {
 		}
 	}, config.idx.screenerRefreshMs);
 }
+
+function ensureBootstrapped() {
+	if (!bootstrapPromise) bootstrapPromise = bootstrap({ scheduleRefresh: !process.env.VERCEL });
+	return bootstrapPromise;
+}
+
+// A Vercel function is invoked without server.listen(), so initialize the
+// in-memory state before each API request (once per warm instance).
+app.use("/api", async (request, response, next) => {
+	try {
+		await ensureBootstrapped();
+		next();
+	} catch (error) {
+		state.error = error.message;
+		state.status = "Gagal memuat katalog saham";
+		response.status(503).json({ error: state.status, detail: error.message });
+	}
+});
 
 function startScreenerScan(scope = catalog) {
 	if (screenerState.running || !scope.length) return false;
@@ -372,18 +392,20 @@ app.post("/api/reset", (request, response) => {
 
 app.get("*splat", (request, response) => response.sendFile(path.join(__dirname, "..", "public", "index.html")));
 
-server.listen(config.port, async () => {
-	console.log(`IDX Local Simulator: http://localhost:${config.port}`);
-	try {
-		await bootstrap();
-		console.log(`${catalog.length} saham dimuat; ${state.selectedCode} Rp${state.market?.price}`);
-	} catch (error) {
-		state.error = error.message;
-		state.status = "Gagal memuat katalog saham";
-		console.error(error.message);
-		broadcast();
-	}
-});
+if (require.main === module) {
+	server.listen(config.port, async () => {
+		console.log(`IDX Local Simulator: http://localhost:${config.port}`);
+		try {
+			await ensureBootstrapped();
+			console.log(`${catalog.length} saham dimuat; ${state.selectedCode} Rp${state.market?.price}`);
+		} catch (error) {
+			state.error = error.message;
+			state.status = "Gagal memuat katalog saham";
+			console.error(error.message);
+			broadcast();
+		}
+	});
+}
 
 function shutdown() {
 	clearInterval(refreshTimer);
@@ -394,3 +416,5 @@ function shutdown() {
 
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
+
+module.exports = app;

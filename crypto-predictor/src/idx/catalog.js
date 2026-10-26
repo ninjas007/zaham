@@ -35,6 +35,13 @@ function readCache() {
 }
 
 async function loadCatalog() {
+	// Serverless instances have a read-only, short-lived filesystem.  Start from
+	// the checked-in snapshot there instead of making every cold start depend on
+	// KSEI accepting a request from a Vercel IP address.
+	if (process.env.VERCEL) {
+		const cached = readCache();
+		if (cached) return { ...cached, cached: true };
+	}
 	try {
 		const response = await axios.get(idx.catalogUrl, {
 			timeout: 20000,
@@ -44,8 +51,12 @@ async function loadCatalog() {
 		if (stocks.length < 500) throw new Error(`Katalog hanya berisi ${stocks.length} saham`);
 		const result = { source: "KSEI", fetchedAt: new Date().toISOString(), stocks };
 		const file = path.resolve(idx.catalogFile);
-		fs.mkdirSync(path.dirname(file), { recursive: true });
-		fs.writeFileSync(file, JSON.stringify(result, null, 2));
+		// Vercel's deployment filesystem is read-only.  The response itself is
+		// still useful even though it cannot be cached on disk there.
+		if (!process.env.VERCEL) {
+			fs.mkdirSync(path.dirname(file), { recursive: true });
+			fs.writeFileSync(file, JSON.stringify(result, null, 2));
+		}
 		return result;
 	} catch (error) {
 		const cached = readCache();
