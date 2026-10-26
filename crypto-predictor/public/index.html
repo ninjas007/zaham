@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="id">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>IDX Local Simulator</title>
+	<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+	<main class="shell">
+		<header>
+			<div><p class="eyebrow">INDONESIA STOCK PAPER TRADING</p><h1>IDX <span>Local Simulator</span></h1></div>
+			<nav><button class="nav-button active" data-view="dashboard">Dashboard</button><button class="nav-button" data-view="screener">AI Screener</button><button id="account-button" class="nav-button">Masuk</button><button id="theme-toggle" class="nav-button" title="Ganti tema">Light</button></nav>
+			<div id="connection" class="status"><i></i><span>Memuat pasar...</span></div>
+		</header>
+		<section class="card capital-bar">
+			<div><p class="label">MODAL PAPER TRADING</p><h3>Atur saldo awal virtual</h3><small id="capital-status" class="muted">Tersimpan di browser ini</small></div>
+			<div class="capital-form"><span>Rp</span><input id="initial-balance" type="number" min="100000" max="1000000000000000" step="100000" value="100000000"><button id="apply-capital" class="buy">Terapkan & reset</button></div>
+		</section>
+		<section id="dashboard-view" class="workspace view">
+			<aside class="card browser">
+				<div class="section-title"><div><p class="label">KATALOG KSEI</p><h3>Semua saham</h3></div><b id="stock-count">—</b></div>
+				<input id="search" type="search" placeholder="Cari kode atau emiten..." autocomplete="off">
+				<div id="stock-list" class="stock-list"><p class="empty">Memuat daftar saham...</p></div>
+				<div class="pager"><button id="prev">←</button><span id="page-info">—</span><button id="next">→</button></div>
+			</aside>
+
+			<div class="content">
+				<section class="hero card">
+					<div><p id="stock-name" class="label">MEMUAT SAHAM</p><div class="price-row"><h2 id="price">—</h2><span id="change" class="pill">—</span></div><p id="updated" class="muted">Menunggu harga pasar</p></div>
+					<div class="hero-tools"><button id="quick-screener" class="quick-screener">AI Screener saham ini</button><div id="signal" class="signal hold"><small>SINYAL TEKNIKAL</small><strong>HOLD</strong><span>0% confidence</span></div></div>
+				</section>
+
+				<section class="metrics">
+					<article class="card metric"><span>Equity</span><strong id="equity">—</strong><small id="total-pnl">—</small></article>
+					<article class="card metric"><span>Saldo tunai</span><strong id="balance">—</strong><small>IDR virtual</small></article>
+					<article class="card metric"><span>Nilai portofolio</span><strong id="portfolio-value">—</strong><small id="position-count">—</small></article>
+					<article class="card metric"><span>RSI · EMA 9/21</span><strong id="rsi">—</strong><small id="emas">—</small></article>
+				</section>
+
+				<section class="market-grid">
+					<article class="card chart-card"><div class="section-title"><div><p class="label">MARKET CHART</p><h3 id="chart-title">—</h3></div><div class="ranges"><button class="active" data-range="1d">1D</button><button data-range="1w">1W</button><button data-range="1m">1M</button><button data-range="6m">6M</button><button data-range="1y">1Y</button><button data-range="5y">5Y</button></div></div><canvas id="chart"></canvas><span id="candle-count" class="muted"></span></article>
+					<aside class="card trade-card"><p class="label">SIMULASI ORDER</p><h3 id="order-symbol">—</h3><label>Jumlah lot <span>1 lot = 100 saham</span></label><input id="lots" type="number" min="1" step="1" value="1"><div id="estimate" class="estimate">Estimasi —</div><div class="actions"><button id="buy" class="buy">BELI</button><button id="sell" class="sell">JUAL</button></div><p class="disclaimer">Paper trading lokal. Tidak mengirim order ke broker atau bursa.</p><button id="reset" class="reset">Reset akun virtual</button></aside>
+				</section>
+				<section class="card scenario-lab">
+					<div class="section-title"><div><p class="label">AI SIMULATION LAB</p><h3>Proyeksi untung dan rugi</h3><small class="muted">Simpan snapshot analisis untuk dibandingkan dengan harga pasar berikutnya.</small></div><button id="print-journal" class="reset">Print laporan</button></div>
+					<div class="scenario-form"><label>Horizon<select id="scenario-horizon"><option value="1">1 hari</option><option value="5" selected>1 minggu</option><option value="20">1 bulan</option><option value="60">3 bulan</option><option value="252">1 tahun</option></select></label><button id="create-scenario" class="buy">Analisis & simpan simulasi</button></div>
+					<div id="scenario-journal" class="scenario-journal"><p class="empty">Belum ada simulasi tersimpan.</p></div>
+				</section>
+			</div>
+		</section>
+
+		<section id="screener-view" class="view hidden">
+			<div class="card screener-head"><div><p class="label">AI MARKET SCANNER</p><h2>Kandidat naik & turun</h2><p class="muted">Pilih saham terlebih dahulu, lalu jalankan analisis teknikal, berita, dan proyeksi.</p></div><div class="screener-actions"><input id="screener-search" type="search" placeholder="Cari pada hasil screener..." autocomplete="off"><button id="scan-all" class="scan-button" disabled>Mulai screener</button></div></div>
+			<div class="card stock-picker"><div class="section-title"><div><p class="label">PILIH SAHAM</p><h3>Tentukan saham yang akan dianalisis</h3></div><b id="selection-count">0 dipilih</b></div><div class="picker-tools"><input id="picker-search" type="search" placeholder="Cari kode atau nama emiten..." autocomplete="off"><button id="select-all-stocks">Pilih semua</button><button id="clear-stocks">Hapus pilihan</button></div><div id="picker-list" class="picker-list"><p class="empty">Memuat katalog...</p></div></div>
+			<div id="scan-progress" class="card progress-card hidden"><div class="section-title"><span id="scan-label">Memindai pasar...</span><b id="scan-percent">0%</b></div><div class="progress-track"><i id="scan-bar"></i></div></div>
+			<div id="screener-meta" class="screener-meta muted">Belum ada hasil pemindaian.</div>
+			<div class="screener-columns"><article class="card"><div class="section-title"><div><p class="label">BULLISH CANDIDATES</p><h3>Potensi naik</h3><small class="muted">Perkiraan kenaikan harga dari model, bukan kepastian.</small></div><span class="positive">▲</span></div><div id="up-list" class="ranking-list"><p class="empty">Jalankan pemindaian dahulu</p></div></article><article class="card"><div class="section-title"><div><p class="label">BEARISH CANDIDATES</p><h3>Potensi turun</h3><small class="muted">Perkiraan penurunan harga dari model, bukan kepastian.</small></div><span class="negative">▼</span></div><div id="down-list" class="ranking-list"><p class="empty">Jalankan pemindaian dahulu</p></div></article></div>
+		</section>
+
+		<section class="lower-grid">
+			<article class="card"><div class="section-title"><div><p class="label">PORTOFOLIO</p><h3>Posisi terbuka</h3></div></div><div class="table-wrap"><table><thead><tr><th>Saham</th><th>Lot</th><th>Avg</th><th>Harga</th><th>Nilai</th><th>Unrealized</th></tr></thead><tbody id="positions"></tbody></table></div></article>
+			<article class="card"><div class="section-title"><div><p class="label">ANALISIS</p><h3>Alasan sinyal</h3></div><span class="pill">INFORMATIF</span></div><ul id="reasons"></ul></article>
+			<article class="card ai-card"><div class="section-title"><div><p class="label">LOCAL AI</p><h3>Prediksi esok hari</h3></div><span id="ai-badge" class="pill">ML</span></div><div id="ai-result" class="ai-result"><div class="ai-loader">Melatih model 5 tahun...</div></div><p class="disclaimer">Model statistik lokal, bukan kepastian atau rekomendasi investasi.</p></article>
+		</section>
+
+		<section class="card history"><div class="section-title"><div><p class="label">HISTORY</p><h3>Riwayat transaksi</h3></div></div><div class="table-wrap"><table><thead><tr><th>Waktu</th><th>Aksi</th><th>Saham</th><th>Lot</th><th>Harga</th><th>Fee</th><th>Realized P/L</th></tr></thead><tbody id="trades"></tbody></table></div></section>
+		<div id="plan-modal" class="plan-modal hidden" role="dialog" aria-modal="true" aria-labelledby="plan-title">
+			<div class="plan-backdrop" data-close-plan></div>
+			<section class="plan-dialog card">
+				<div class="section-title"><div><p class="label">SIMULASI RENCANA</p><h3 id="plan-title">Rencana transaksi</h3></div><button class="plan-close" data-close-plan aria-label="Tutup">×</button></div>
+				<p id="plan-summary" class="plan-summary muted"></p>
+				<div id="plan-levels" class="plan-levels"></div>
+				<label class="plan-lot-label">Jumlah lot simulasi <input id="plan-lots" type="number" min="1" step="1" value="1"></label>
+				<div id="plan-calculation" class="plan-calculation"></div>
+				<div class="plan-actions"><button id="plan-use-order" class="buy">Gunakan di simulasi order</button><button class="reset" data-close-plan>Tutup</button></div>
+				<p class="disclaimer">Ukuran posisi memakai maksimum 10% saldo dan risiko sekitar 1% equity. Harga pasar dapat berubah; target dan keuntungan bukan jaminan.</p>
+			</section>
+		</div>
+		<div id="auth-modal" class="plan-modal hidden" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+			<div class="plan-backdrop" data-close-auth></div>
+			<section class="auth-dialog card">
+				<div class="section-title"><div><p class="label">AKUN SIMULATOR</p><h3 id="auth-title">Masuk</h3></div><button class="plan-close" data-close-auth aria-label="Tutup">×</button></div>
+				<div id="auth-guest"><div class="auth-tabs"><button id="auth-login-tab" class="active">Masuk</button><button id="auth-register-tab">Daftar</button></div><form id="auth-form"><label id="auth-name-wrap" class="hidden">Nama<input id="auth-name" maxlength="60" autocomplete="name"></label><label>Email<input id="auth-email" type="email" maxlength="160" required autocomplete="email"></label><label>Password<input id="auth-password" type="password" minlength="8" maxlength="128" required autocomplete="current-password"></label><button id="auth-submit" class="buy" type="submit">Masuk</button></form><p id="auth-error" class="negative"></p></div>
+				<div id="auth-user" class="hidden"><h3 id="auth-user-name"></h3><p id="auth-user-email" class="muted"></p><div class="quota-box"><span>Kuota analisis hari ini</span><strong id="auth-quota">—</strong></div><button id="auth-logout" class="reset">Keluar</button></div>
+			</section>
+		</div>
+		<div id="toast"></div>
+	</main>
+	<script src="/app.js"></script>
+</body>
+</html>

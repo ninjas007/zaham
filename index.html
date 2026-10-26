@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Pusat alat analisis saham Zham.">
+  <title>Zham — Pusat Analisis Saham</title>
+  <style>
+    :root { color-scheme: dark; --ink:#edf4ff; --muted:#9bb0cb; --panel:#101d33; --line:#294362; --accent:#4de0b2; --accent-2:#69a9ff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:radial-gradient(circle at 20% 0%,#1f4b72 0,transparent 34rem),radial-gradient(circle at 100% 100%,#193c53 0,transparent 35rem),#081221; }
+    main { width:min(1080px,calc(100% - 40px)); margin:0 auto; padding:72px 0; }
+    .eyebrow { margin:0 0 14px; color:var(--accent); font-weight:700; font-size:.78rem; letter-spacing:.14em; }
+    h1 { max-width:760px; margin:0; font-size:clamp(2.3rem,6vw,4.8rem); letter-spacing:-.055em; line-height:1.04; }
+    .intro { max-width:650px; color:var(--muted); font-size:1.08rem; line-height:1.7; margin:22px 0 45px; }
+    .tools { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+    .tool { display:flex; flex-direction:column; min-height:285px; padding:28px; text-decoration:none; color:inherit; background:linear-gradient(145deg,rgba(27,51,82,.96),rgba(13,28,49,.96)); border:1px solid var(--line); border-radius:20px; transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease; }
+    .tool:hover,.tool:focus-visible { transform:translateY(-5px); border-color:var(--accent); box-shadow:0 18px 45px rgba(0,0,0,.28); outline:none; }
+    .icon { display:grid; place-items:center; width:52px; height:52px; border-radius:14px; background:rgba(77,224,178,.13); color:var(--accent); font-size:1.6rem; }
+    .tool:nth-child(2) .icon { background:rgba(105,169,255,.15); color:var(--accent-2); }
+    h2 { margin:25px 0 10px; font-size:1.55rem; }
+    .tool p { margin:0; color:var(--muted); line-height:1.6; }
+    .open { margin-top:auto; padding-top:28px; color:var(--accent); font-weight:750; }
+    .tool:nth-child(2) .open { color:var(--accent-2); }
+    footer { margin-top:45px; color:var(--muted); font-size:.9rem; }
+    @media (max-width:680px) { main { padding:48px 0; } .tools { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">ZHAM · STOCK TOOLKIT</p>
+    <h1>Semua alat saham, dalam satu tempat.</h1>
+    <p class="intro">Pilih alat yang ingin digunakan untuk menghitung potensi dividen atau melakukan simulasi dan prediksi pergerakan saham Indonesia.</p>
+    <section class="tools" aria-label="Menu alat saham">
+      <a class="tool" href="kalkulator_dividend_hunter.html">
+        <span class="icon" aria-hidden="true">%</span>
+        <h2>Kalkulator Dividend Hunter</h2>
+        <p>Hitung estimasi dividen, yield, dan potensi pendapatan dari portofolio saham Anda.</p>
+        <span class="open">Buka kalkulator →</span>
+      </a>
+      <a class="tool" href="http://localhost:3600" target="_blank" rel="noopener">
+        <span class="icon" aria-hidden="true">↗</span>
+        <h2>Prediksi & Simulasi Saham</h2>
+        <p>Pantau harga, indikator teknikal, paper trading, serta screener kandidat saham naik dan turun.</p>
+        <span class="open">Buka prediksi saham →</span>
+      </a>
+    </section>
+    <footer>Prediksi dan simulasi bersifat informatif, bukan rekomendasi investasi.</footer>
+  </main>
+</body>
+</html>
