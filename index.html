@@ -17,11 +17,13 @@
     .tool { display:flex; flex-direction:column; min-height:285px; padding:28px; text-decoration:none; color:inherit; background:linear-gradient(145deg,rgba(27,51,82,.96),rgba(13,28,49,.96)); border:1px solid var(--line); border-radius:20px; transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease; }
     .tool:hover,.tool:focus-visible { transform:translateY(-5px); border-color:var(--accent); box-shadow:0 18px 45px rgba(0,0,0,.28); outline:none; }
     .icon { display:grid; place-items:center; width:52px; height:52px; border-radius:14px; background:rgba(77,224,178,.13); color:var(--accent); font-size:1.6rem; }
-    .tool:nth-child(2) .icon { background:rgba(105,169,255,.15); color:var(--accent-2); }
+    .tool:nth-child(2) .icon { background:rgba(244,183,82,.15); color:#f4b752; }
+    .tool:nth-child(3) .icon { background:rgba(105,169,255,.15); color:var(--accent-2); }
     h2 { margin:25px 0 10px; font-size:1.55rem; }
     .tool p { margin:0; color:var(--muted); line-height:1.6; }
     .open { margin-top:auto; padding-top:28px; color:var(--accent); font-weight:750; }
-    .tool:nth-child(2) .open { color:var(--accent-2); }
+    .tool:nth-child(2) .open { color:#f4b752; }
+    .tool:nth-child(3) .open { color:var(--accent-2); }
     footer { margin-top:45px; color:var(--muted); font-size:.9rem; }
     @media (max-width:680px) { main { padding:48px 0; } .tools { grid-template-columns:1fr; } }
   </style>
@@ -37,6 +39,12 @@
         <h2>Kalkulator Dividend Hunter</h2>
         <p>Hitung estimasi dividen, yield, dan potensi pendapatan dari portofolio saham Anda.</p>
         <span class="open">Buka kalkulator →</span>
+      </a>
+      <a class="tool" href="dividenki/">
+        <span class="icon" aria-hidden="true">&#9207;</span>
+        <h2>DividenKi</h2>
+        <p>Pantau kalender saham yang akan membagikan dividen, jadwal cum date, serta hitung estimasi pendapatan dividen.</p>
+        <span class="open">Buka kalender dividen &rarr;</span>
       </a>
       <a class="tool" href="https://zham-predictor.vercel.app" target="_blank" rel="noopener">
         <span class="icon" aria-hidden="true">↗</span>
