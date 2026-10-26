@@ -1,0 +1,5 @@
+{
+  "functions": {
+    "api/dividends.js": { "maxDuration": 30 }
+  }
+}
