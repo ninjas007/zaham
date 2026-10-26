@@ -3,6 +3,9 @@
     { "source": "/api/:path*", "destination": "/api/index.js" }
   ],
   "functions": {
-    "api/index.js": { "maxDuration": 30 }
+    "api/index.js": {
+      "maxDuration": 30,
+      "includeFiles": "data/stocks.json"
+    }
   }
 }

@@ -2,6 +2,9 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 const { idx } = require("../config");
+// Static import makes the seed part of Vercel's function bundle.  A dynamic
+// fs.readFileSync path alone is not reliably traced by the deployment bundler.
+const bundledCatalog = require("../../data/stocks.json");
 
 function decodeHtml(value) {
 	return value
@@ -30,7 +33,7 @@ function readCache() {
 		const cache = JSON.parse(fs.readFileSync(path.resolve(idx.catalogFile), "utf8"));
 		return Array.isArray(cache.stocks) ? cache : null;
 	} catch {
-		return null;
+		return Array.isArray(bundledCatalog.stocks) ? bundledCatalog : null;
 	}
 }
 
